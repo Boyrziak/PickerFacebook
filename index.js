@@ -4,8 +4,10 @@ const
     express = require('express'),
     bodyParser = require('body-parser'),
     ngrok = require('ngrok'),
+    request = require('request'),
+    config = require('config'),
     app = express().use(bodyParser.json());
-
+const ACCESS_TOKEN = config.get('facebook.page.access_token');
 app.listen(process.env.PORT || 1337, (err)=> {
     if (err) return console.log(`Something bad has happen : ${err}`);
     console.log(`Server listening`);
@@ -17,13 +19,16 @@ app.listen(process.env.PORT || 1337, (err)=> {
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
+
 app.post('/webhook', (req, res) => {
     let body = req.body;
     if (body.object === 'page') {
         body.entry.forEach(function (entry) {
+            // console.log(entry);
             let webhookEvent = entry.messaging[0];
             let senderPSID = webhookEvent.sender.id;
             console.log('Sender PSID: ' + senderPSID);
+            console.log('Postback: ' + webhookEvent.postback);
             if (webhookEvent.message) {
                 handleMessage(senderPSID, webhookEvent.message);
             } else if (webhookEvent.postback) {
@@ -46,8 +51,7 @@ app.get('/webhook', (req, res) => {
             console.log('Webhook Verified');
             res.status(200).send(challenge);
         } else {
-            // res.sendStatus(403);
-            console.log('Fuck');
+            res.sendStatus(403);
         }
     }
 });
@@ -55,16 +59,19 @@ app.get('/webhook', (req, res) => {
 const handleMessage = (sender_psid, received_message) => {
     let response;
     console.log(received_message.text);
-    if (received_message.text) {
-
+    if (received_message.text === 'Hello') {
+        response = askTemplate('Which language do you prefer');
+        callSendAPI(sender_psid, response);
     }
 };
 
 const handlePostback = (sender_psid, received_postback) => {
     let response;
     let payload = received_postback.payload;
+    console.log(payload);
     if(payload === 'GET_STARTED'){
-        response = askTemplate('Are you a Cat or Dog Person');
+        // response = askTemplate('Are you a Cat or Dog Person');
+        response = greetingTemplate();
         callSendAPI(sender_psid, response);
     }
 };
@@ -79,17 +86,31 @@ const askTemplate = (text) => {
                 "buttons":[
                     {
                         "type":"postback",
-                        "title":"Cats",
-                        "payload":"CAT_PICS"
+                        "title":"Arabic",
+                        "payload":"ARABIC_TEXT"
                     },
                     {
                         "type":"postback",
-                        "title":"Dogs",
-                        "payload":"DOG_PICS"
+                        "title":"English",
+                        "payload":"ENGLISH_TEXT"
                     }
                 ]
             }
         }
+    }
+};
+
+const greetingTemplate = () => {
+    return {
+        "greeting": [
+            {
+                "locale": "default",
+                "text": "Hi {{user_first_name}}, Morris here! Is English good for you or you would prefer to chat with us in Arabic?"
+            }, {
+                "locale": "en_US",
+                "text": "Timeless apparel for the masses."
+            }
+        ]
     }
 };
 
@@ -105,7 +126,7 @@ const callSendAPI = (sender_psid, response, cb = null) => {
     // Отправляем HTTP-запрос к Messenger Platform
     request({
         "uri": "https://graph.facebook.com/v2.6/me/messages",
-        "qs": { "access_token": config.get('facebook.page.access_token') },
+        "qs": { "access_token": ACCESS_TOKEN },
         "method": "POST",
         "json": request_body
     }, (err, res, body) => {
@@ -117,4 +138,4 @@ const callSendAPI = (sender_psid, response, cb = null) => {
             console.error("Unable to send message:" + err);
         }
     });
-}
+};

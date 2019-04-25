@@ -2,7 +2,7 @@
   "facebook": {
     "page": {
       "access_token": "EAAogTAJIP40BADOlIRSJZAHnAamiScxd28nmThAXLZCEjVieZBB2i02tnEyisl4ft0HkE3hZBCkg1C5Rm9NP9D8lpnZCZBZBPoGVEjcEqFMlr2rE8yNWZAdo53XUKvl6rB0iVxsUhJ4ELa4b7KCf7wxtqNMWahwBZCZCmxHLMGE5H4kAZDZD",
-      "varify_token": "hookMGToken"
+      "verify_token": "hookMGToken"
     }
   }
 }
