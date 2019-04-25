@@ -1,0 +1,6 @@
+"greeting": [
+    {
+      "locale":"default",
+      "text":"Hello {{user_first_name}}! Are you ready to see the cutests cats and dogs"
+    }
+  ]

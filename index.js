@@ -8,7 +8,7 @@ const
     config = require('config'),
     app = express().use(bodyParser.json());
 const ACCESS_TOKEN = config.get('facebook.page.access_token');
-app.listen(process.env.PORT || 1337, (err)=> {
+app.listen(process.env.PORT || 1337, (err) => {
     if (err) return console.log(`Something bad has happen : ${err}`);
     console.log(`Server listening`);
 
@@ -28,7 +28,6 @@ app.post('/webhook', (req, res) => {
             let webhookEvent = entry.messaging[0];
             let senderPSID = webhookEvent.sender.id;
             console.log('Sender PSID: ' + senderPSID);
-            console.log('Postback: ' + webhookEvent.postback);
             if (webhookEvent.message) {
                 handleMessage(senderPSID, webhookEvent.message);
             } else if (webhookEvent.postback) {
@@ -46,7 +45,7 @@ app.get('/webhook', (req, res) => {
     let mode = req.query['hub.mode'];
     let token = req.query['hub.verify_token'];
     let challenge = req.query['hub.challenge'];
-    if (mode&&token) {
+    if (mode && token) {
         if (mode === 'subscribe' && token === VERIFY_TOKEN) {
             console.log('Webhook Verified');
             res.status(200).send(challenge);
@@ -58,8 +57,9 @@ app.get('/webhook', (req, res) => {
 
 const handleMessage = (sender_psid, received_message) => {
     let response;
-    console.log(received_message.text);
-    if (received_message.text === 'Hello') {
+    console.log('Message: ' + received_message.text);
+    let test = 'Hello';
+    if (received_message.text.toUpperCase() === test.toUpperCase()) {
         response = askTemplate('Which language do you prefer');
         callSendAPI(sender_psid, response);
     }
@@ -68,31 +68,31 @@ const handleMessage = (sender_psid, received_message) => {
 const handlePostback = (sender_psid, received_postback) => {
     let response;
     let payload = received_postback.payload;
-    console.log(payload);
-    if(payload === 'GET_STARTED'){
+    console.log('Postback: ' + payload);
+    if (payload === 'GET_STARTED') {
         // response = askTemplate('Are you a Cat or Dog Person');
-        response = greetingTemplate();
+        response = greetingTemplate('Hello {{user_first_name}}! Morris here! Is English good or would you prefer to chat with us in Arabic?');
         callSendAPI(sender_psid, response);
     }
 };
 
 const askTemplate = (text) => {
     return {
-        "attachment":{
-            "type":"template",
-            "payload":{
-                "template_type":"button",
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "button",
                 "text": text,
-                "buttons":[
+                "buttons": [
                     {
-                        "type":"postback",
-                        "title":"Arabic",
-                        "payload":"ARABIC_TEXT"
+                        "type": "postback",
+                        "title": "Arabic",
+                        "payload": "ARABIC_TEXT"
                     },
                     {
-                        "type":"postback",
-                        "title":"English",
-                        "payload":"ENGLISH_TEXT"
+                        "type": "postback",
+                        "title": "English",
+                        "payload": "ENGLISH_TEXT"
                     }
                 ]
             }
@@ -100,17 +100,27 @@ const askTemplate = (text) => {
     }
 };
 
-const greetingTemplate = () => {
+const greetingTemplate = (text) => {
     return {
-        "greeting": [
-            {
-                "locale": "default",
-                "text": "Hi {{user_first_name}}, Morris here! Is English good for you or you would prefer to chat with us in Arabic?"
-            }, {
-                "locale": "en_US",
-                "text": "Timeless apparel for the masses."
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "button",
+                "text": text,
+                "buttons": [
+                    {
+                        "type": "postback",
+                        "title": "Yes, English is fine",
+                        "payload": "ENGLISH_TEXT"
+                    },
+                    {
+                        "type": "postback",
+                        "title": "Let's switch to Arabic",
+                        "payload": "ARABIC_TEXT"
+                    }
+                ]
             }
-        ]
+        }
     }
 };
 
@@ -126,12 +136,12 @@ const callSendAPI = (sender_psid, response, cb = null) => {
     // Отправляем HTTP-запрос к Messenger Platform
     request({
         "uri": "https://graph.facebook.com/v2.6/me/messages",
-        "qs": { "access_token": ACCESS_TOKEN },
+        "qs": {"access_token": ACCESS_TOKEN},
         "method": "POST",
         "json": request_body
     }, (err, res, body) => {
         if (!err) {
-            if(cb){
+            if (cb) {
                 cb();
             }
         } else {
