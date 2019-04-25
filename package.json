@@ -1,0 +1,20 @@
+{
+  "name": "messenger",
+  "version": "1.0.0",
+  "description": "Test for webhooks",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "facebook",
+    "messenger"
+  ],
+  "author": "Nikita Borziak",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "ngrok": "^3.1.1"
+  }
+}
