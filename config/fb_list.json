@@ -1,0 +1,126 @@
+"attachment": {
+"type": "template",
+"payload": {
+"template_type": "list",
+"top_element_style": "compact",
+"attachment": {
+"type": "template",
+"payload": {
+"template_type": "generic",
+"elements": [
+{
+"title": "MG 6",
+"subtitle": "Sedan",
+// "image_url": path.join(__dirname, "/img/MG6.png"),
+"buttons": [
+{
+"type": "postback",
+"title": "Request a test drive",
+"payload": "MG6TEST"
+},
+{
+"type": "postback",
+"title": "Brochure",
+"payload": "MG6Brochure"
+},
+{
+"type": "postback",
+"title": "Get a quote",
+"payload": "MG6QUOTE"
+}
+]
+},
+{
+"title": "MG ZS",
+"subtitle": "SUV",
+"image_url": "https://67adf7b6.ngrok.io/MGZS.png",
+"buttons": [
+{
+"type": "postback",
+"title": "Request a test drive",
+"payload": "MGZSSTEST"
+},
+{
+"type": "postback",
+"title": "Brochure",
+"payload": "MGZSBrochure"
+},
+{
+"type": "postback",
+"title": "Get a quote",
+"payload": "MGZSQUOTE"
+}
+]
+},
+{
+"title": "MG 360",
+// "image_url": "https://67adf7b6.ngrok.io/MG6.png",
+"subtitle": "SUV",
+"buttons": [
+{
+"type": "postback",
+"title": "Request a test drive",
+"payload": "MG360TEST"
+},
+{
+"type": "postback",
+"title": "Brochure",
+"payload": "MG360Brochure"
+},
+{
+"type": "postback",
+"title": "Get a quote",
+"payload": "MG360QUOTE"
+}
+]
+},
+{
+"title": "MG GS",
+// "image_url": "https://67adf7b6.ngrok.io/MGGS.png",
+"subtitle": "SUV",
+"buttons": [
+{
+"type": "postback",
+"title": "Request a test drive",
+"payload": "MGGSTEST"
+},
+{
+"type": "postback",
+"title": "Brochure",
+"payload": "MGGSBrochure"
+},
+{
+"type": "postback",
+"title": "Get a quote",
+"payload": "MGGSQUOTE"
+}
+]
+},
+{
+"title": "MG RX5",
+// "image_url": "https://67adf7b6.ngrok.io/MGRX5.png",
+"subtitle": "SUV",
+"buttons": [
+{
+"type": "postback",
+"title": "Request a test drive",
+"payload": "RX5TEST"
+},
+{
+"type": "postback",
+"title": "Brochure",
+"payload": "MGRX5Brochure"
+},
+{
+"type": "postback",
+"title": "Get a quote",
+"payload": "MGRX5QUOTE"
+}
+]
+}
+]
+}
+}
+]
+}
+}
