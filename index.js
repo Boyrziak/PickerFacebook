@@ -51,7 +51,7 @@ app.post('/webhook', (req, res) => {
             let senderPSID = webhookEvent.sender.id;
             console.log('Sender PSID: ' + senderPSID);
             if (webhookEvent.message) {
-                // handleMessage(senderPSID, webhookEvent.message);
+                handleMessage(senderPSID, webhookEvent.message);
             } else if (webhookEvent.postback) {
                 handlePostback(senderPSID, webhookEvent.postback);
             }
@@ -110,19 +110,21 @@ const handlePostback = (sender_psid, received_postback) => {
                 if (!err) {
                     let result = JSON.parse(body);
                     name = result.first_name;
-                    response = askTemplate('Hello ' + name + '! Morris here! Is English good or would you prefer to chat with us in Arabic?', {
+                    let buttons = generateButtons([{
                         title: "Yes, English is fine",
                         payload: "ENGLISH_TEXT"
-                    }, {title: "Let's switch to Arabic", payload: "ARABIC_TEXT"});
+                    }, {title: "Let's switch to Arabic", payload: "ARABIC_TEXT"}]);
+                    response = askTemplate('Hello ' + name + '! Morris here! Is English good or would you prefer to chat with us in Arabic?', buttons);
                     callSendAPI(sender_psid, response);
                 }
             });
             break;
         case 'ENGLISH_TEXT':
-            response = askTemplate('Great, now what would you like to talk about today?', {
+            let buttons = generateButtons([{
                 title: 'Discover MG',
                 payload: 'DISCOVER'
-            }, {title: 'After sales', payload: 'AFTER_SALES'});
+            }, {title: 'After sales', payload: 'AFTER_SALES'}]);
+            response = askTemplate('Great, now what would you like to talk about today?', buttons);
             callSendAPI(sender_psid, response);
             break;
         case 'DISCOVER':
@@ -133,10 +135,10 @@ const handlePostback = (sender_psid, received_postback) => {
             response = messageTemplate('Nice choice the ' + model);
             callSendAPI(sender_psid, response);
             let second_response = fileTemplate('https://67adf7b6.ngrok.io/img/'+model);
-            callSendAPI(sender_psid, response);
+            callSendAPI(sender_psid, second_response);
             let dealerButtons = generateButtons([{title: 'Dubai', payload: 'CITY_DUBAI'},{title: 'Abu Dhabi', payload: 'CITY_ABU'},{title: 'Ras Al Khaimah', payload: 'CITY_KHAIMAH'},{title: 'Fujairah', payload: 'CITY_FUJAIRAHAN'},{title: 'Ajman', payload: 'CITY_AJMAN'}]);
             let third_response = askTemplate('Which dealership is the most convenient for you?', dealerButtons);
-            callSendAPI(sender_psid, response);
+            callSendAPI(sender_psid, third_response);
             break;
     }
 };

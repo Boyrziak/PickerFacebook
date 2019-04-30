@@ -1,7 +1,7 @@
 {
   "facebook": {
     "page": {
-      "access_token": "EAAogTAJIP40BADOlIRSJZAHnAamiScxd28nmThAXLZCEjVieZBB2i02tnEyisl4ft0HkE3hZBCkg1C5Rm9NP9D8lpnZCZBZBPoGVEjcEqFMlr2rE8yNWZAdo53XUKvl6rB0iVxsUhJ4ELa4b7KCf7wxtqNMWahwBZCZCmxHLMGE5H4kAZDZD",
+      "access_token": "EAAogTAJIP40BAETiDBHsEgwM2RIimcgNaB3oE87LaGbqMP0pZBZCDLRJZAv2WoL4mtMTubXUqTQlV3Qb65ihAWr0VawYt3tyCXu4VHk4MfdvBmqCQWlLtQmDZBgBMs0OLCvfSw5BGzzsKEabt5mbysYsReIYhX0X9KwJV2XdLwZDZD",
       "verify_token": "hookMGToken",
       "uri": "https://graph.facebook.com/v2.6/me/messages"
     }
