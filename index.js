@@ -137,8 +137,10 @@ const handlePostback = (sender_psid, received_postback) => {
             let second_response = fileTemplate('https://67adf7b6.ngrok.io/img/'+model);
             callSendAPI(sender_psid, second_response);
             let dealerButtons = generateButtons([{title: 'Dubai', payload: 'CITY_DUBAI'},{title: 'Abu Dhabi', payload: 'CITY_ABU'},{title: 'Ras Al Khaimah', payload: 'CITY_KHAIMAH'},{title: 'Fujairah', payload: 'CITY_FUJAIRAHAN'},{title: 'Ajman', payload: 'CITY_AJMAN'}]);
-            let third_response = askTemplate('Which dealership is the most convenient for you?', dealerButtons);
+            let third_response = askTemplate('Which dealership is the most convenient for you?');
             callSendAPI(sender_psid, third_response);
+            let fourth_response = countriesSliderTemplate();
+            callSendAPI(sender_psid, fourth_response);
             break;
     }
 };
@@ -178,6 +180,10 @@ const messageTemplate = (text) => {
 const sliderTemplate = () => {
     console.log('Slider template');
     return require('./fb_carousel');
+};
+
+const countriesSliderTemplate = () => {
+    return require('./fb_cities_carousel');
 };
 
 const fileTemplate = (file) => {
