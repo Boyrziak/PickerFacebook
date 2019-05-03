@@ -39,11 +39,6 @@
               },
               {
                 "type": "postback",
-                "title": "Salmabad",
-                "payload": "SALMABAD"
-              },
-              {
-                "type": "postback",
                 "title": "Other",
                 "payload": "BAHRAIN_OTHER"
               }
@@ -74,11 +69,6 @@
               },
               {
                 "type": "postback",
-                "title": "Al Khobar",
-                "payload": "Al Khobar"
-              },
-              {
-                "type": "postback",
                 "title": "Other",
                 "payload": "KSA_OTHER"
               }
@@ -96,11 +86,6 @@
                 "type": "postback",
                 "title": "Abu Dhabi",
                 "payload": "Abu Dhabi"
-              },
-              {
-                "type": "postback",
-                "title": "Ras Al-Khaimah",
-                "payload": "Ras Al-Khaimah"
               },
               {
                 "type": "postback",

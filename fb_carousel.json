@@ -6,7 +6,7 @@
         "elements": [
           {
             "title": "MG 6",
-            "image_url": "https://67adf7b6.ngrok.io/img/MG6",
+            "image_url": "https://19b35db6.ngrok.io/img/MG6",
             "subtitle": "Sedan",
             "buttons": [
               {
@@ -29,7 +29,7 @@
           {
             "title": "MG ZS",
             "subtitle": "SUV",
-            "image_url": "https://67adf7b6.ngrok.io/img/MGZS.png",
+            "image_url": "https://19b35db6.ngrok.io/img/MGZS",
             "buttons": [
               {
                 "type": "postback",
@@ -51,7 +51,7 @@
           {
             "title": "MG 360",
             "subtitle": "SUV",
-            "image_url": "https://67adf7b6.ngrok.io/img/MG360.png",
+            "image_url": "https://19b35db6.ngrok.io/img/MG360",
             "buttons": [
               {
                 "type": "postback",
@@ -73,7 +73,7 @@
           {
             "title": "MG GS",
             "subtitle": "SUV",
-            "image_url": "https://67adf7b6.ngrok.io/img/MGGS.png",
+            "image_url": "https://19b35db6.ngrok.io/img/MGGS",
             "buttons": [
               {
                 "type": "postback",
@@ -95,7 +95,7 @@
           {
             "title": "MG RX5",
             "subtitle": "SUV",
-            "image_url": "https://67adf7b6.ngrok.io/img/MGRX5.png",
+            "image_url": "https://19b35db6.ngrok.io/img/MGRX5",
             "buttons": [
               {
                 "type": "postback",

@@ -30,17 +30,23 @@ app.get('/', (req, res) => {
 
 app.get('*', (req, res) => {
     console.log(req.path);
-    if (req.path !== '/favicon.ico') {
+    let regExp = /(\w*).(png)/g;
+    let requestExt = regExp.exec(req.path);
+    console.log(requestExt);
+    if (requestExt[2] === 'png') {
         let file = path.join(__dirname, req.path);
-        console.log(file + '.png');
-        let stream = fs.createReadStream(file + '.png');
+        console.log(file);
+        let stream = fs.createReadStream(file);
+        stream.on('error', (err) => {
+            console.log(`Something bad has happen : ${err}`);
+            res.send('No such file');
+        });
         stream.on('open', () => {
-            res.set('Content-Type', 'image/png');
+            res.set('Content-Type', 'image/' + requestExt[2]);
             stream.pipe(res);
         });
     }
 });
-
 
 
 app.post('/webhook', (req, res) => {
@@ -49,7 +55,7 @@ app.post('/webhook', (req, res) => {
         body.entry.forEach(function (entry) {
             let webhookEvent = entry.messaging[0];
             let senderPSID = webhookEvent.sender.id;
-            console.log('Sender PSID: ' + senderPSID);
+            // console.log('Sender PSID: ' + senderPSID);
             if (webhookEvent.message) {
                 handleMessage(senderPSID, webhookEvent.message);
             } else if (webhookEvent.postback) {
@@ -79,24 +85,41 @@ app.get('/webhook', (req, res) => {
 
 const handleMessage = (sender_psid, received_message) => {
     let response;
+    typingSendAPI(sender_psid, 'typing_on');
     console.log('Message: ' + received_message.text);
-    let test = 'Hello';
-    if (received_message.text.toUpperCase() === test.toUpperCase()) {
-        response = messageTemplate('I did not understand that');
-        callSendAPI(sender_psid, response);
+    let regExp = /\+\d/;
+    let result;
+    if (received_message.text) {
+        result = received_message.text.match(regExp);
     }
+    if (result && result[0].length > 0) {
+        response = messageTemplate('Thanks for your request, one of our MG Experts will get in touch with you during working hours. Have a great day!');
+        callSendAPI(sender_psid, response);
+        return;
+    }
+    if (validator.validate(received_message.text)) {
+        response = messageTemplate('One last question, what is your phone number(please include the country code ex: +977880009)');
+    } else {
+        response = messageTemplate('I did not understand that');
+    }
+    callSendAPI(sender_psid, response);
+    typingSendAPI(sender_psid, 'typing_off');
 };
 
 const handlePostback = (sender_psid, received_postback) => {
     let response;
+    typingSendAPI(sender_psid, 'typing_on');
     let payload = received_postback.payload;
+    console.log(payload);
     let model;
-    let result = /(\w+)(quote)/gi.exec(payload)
-    if(result) {
+    let result = /(\w+)(quote)/gi.exec(payload);
+    let timer;
+    if (result) {
         payload = result[2];
         model = result[1];
     }
     let name = 'User';
+    const config = require('config');
     switch (payload) {
         case 'GET_STARTED':
             request({
@@ -128,34 +151,139 @@ const handlePostback = (sender_psid, received_postback) => {
             callSendAPI(sender_psid, response);
             break;
         case 'DISCOVER':
-            response = sliderTemplate();
+            // response = sliderTemplate();
+            let models = config.get('facebook.data.models');
+            let modelSlides = [];
+            models.forEach((model) => {
+                let buttonsObjects = [];
+                model.buttons.forEach((button) => {
+                    buttonsObjects.push(button);
+                });
+                let modelButtons = generateButtons(buttonsObjects);
+                let modelSlide = generateSlide({
+                    "title": model.title,
+                    "subtitle": model.subtitle,
+                    "img": 'https://44238620.ngrok.io/' + model.title + '.png'
+                    // "img": 'http://qaru.site/img/logo-dark.svg'
+                }, modelButtons);
+                modelSlides.push(modelSlide);
+            });
+            response = generatedSliderTemplate(modelSlides);
             callSendAPI(sender_psid, response);
+            timer = setTimeout(()=>{
+                request({
+                    "uri": "https://graph.facebook.com/" + sender_psid,
+                    "qs": {
+                        "fields": "first_name",
+                        "access_token": ACCESS_TOKEN
+                    },
+                    "method": "GET",
+                }, (err, res, body) => {
+                    if (!err) {
+                        let result = JSON.parse(body);
+                        name = result.first_name;
+                        let helperButtons = generateButtons([{
+                            'title': 'Showroom locations',
+                            'payload': 'SHOWROOM_LOCATION'
+                        }, {'title': 'Other', 'payload': 'Other'}]);
+                        let helperResponce = askTemplate("Did you find what you're looking for " + name + '? If not, can I help you with anything else?', helperButtons);
+                        callSendAPI(sender_psid, helperResponce);
+                    }
+                });
+            }, 5000);
             break;
         case 'QUOTE':
             response = messageTemplate('Nice choice the ' + model);
             callSendAPI(sender_psid, response);
-            let second_response = fileTemplate('https://67adf7b6.ngrok.io/img/'+model);
+            let second_response = fileTemplate('https://44238620.ngrok.io/img/' + model + '.png');
             callSendAPI(sender_psid, second_response);
-            let dealerButtons = generateButtons([{title: 'Dubai', payload: 'CITY_DUBAI'},{title: 'Abu Dhabi', payload: 'CITY_ABU'},{title: 'Ras Al Khaimah', payload: 'CITY_KHAIMAH'},{title: 'Fujairah', payload: 'CITY_FUJAIRAHAN'},{title: 'Ajman', payload: 'CITY_AJMAN'}]);
-            let third_response = askTemplate('Which dealership is the most convenient for you?');
-            callSendAPI(sender_psid, third_response);
-            let fourth_response = countriesSliderTemplate();
+            setTimeout(() => {
+                let third_response = messageTemplate('Which dealership is the most convenient for you?');
+                callSendAPI(sender_psid, third_response);
+                let countries = config.get('facebook.data.countries');
+                let countrySlides = [];
+                countries.forEach((country) => {
+                    let citiesObjects = [];
+                    if (country.cities.length <= 3) {
+                        country.cities.forEach((city) => {
+                            citiesObjects.push({"title": city.title, "payload": city.title});
+                        });
+                    } else if (country.cities.length > 3) {
+                        for (let i = 0; i < 2; i++) {
+                            citiesObjects.push({"title": country.cities[i].title, "payload": country.cities[i].title});
+                        }
+                        citiesObjects.push({"title": "Other", "payload": country.title + '_other'});
+                    }
+                    let citiesButtons = generateButtons(citiesObjects);
+                    let countrySlide = generateSlide({"title": country.title}, citiesButtons);
+                    countrySlides.push(countrySlide);
+                });
+                let fourth_response = generatedSliderTemplate(countrySlides);
+                callSendAPI(sender_psid, fourth_response);
+            }, 2000);
+            break;
+        case 'SHOWROOM_LOCATION':
+            let countries = config.get('facebook.data.countries');
+            let countrySlides = [];
+            countries.forEach((country) => {
+                let citiesObjects = [];
+                if (country.cities.length <= 3) {
+                    country.cities.forEach((city) => {
+                        citiesObjects.push({"title": city.title, "payload": city.title});
+                    });
+                } else if (country.cities.length > 3) {
+                    for (let i = 0; i < 2; i++) {
+                        citiesObjects.push({"title": country.cities[i].title, "payload": country.cities[i].title});
+                    }
+                    citiesObjects.push({"title": "Other", "payload": country.title + '_other'});
+                }
+                let citiesButtons = generateButtons(citiesObjects);
+                let countrySlide = generateSlide({"title": country.title}, citiesButtons);
+                countrySlides.push(countrySlide);
+            });
+            let fourth_response = generatedSliderTemplate(countrySlides);
             callSendAPI(sender_psid, fourth_response);
             break;
+        default:
+            response = messageTemplate('Nice, let me grab some contact details. What is your email?');
+            callSendAPI(sender_psid, response);
+            break;
     }
+    typingSendAPI(sender_psid, 'typing_off');
 };
 
 const generateButtons = (options) => {
-  let buttons = [];
-  options.forEach((option) => {
-     let button = {
-       "type": "postback",
-       "title": option.title,
-       "payload": option.payload
-     };
-     buttons.push(button);
-  });
-  return buttons;
+    let buttons = [];
+    options.forEach((option) => {
+        let button = {
+            "type": "postback",
+            "title": option.title,
+            "payload": option.payload
+        };
+        buttons.push(button);
+    });
+    return buttons;
+};
+
+const generateSlide = (options, buttons) => {
+    return {
+        "title": options.title,
+        "image_url": options.img,
+        "subtitle": options.subtitle,
+        "buttons": buttons
+    }
+};
+
+const generatedSliderTemplate = (slides) => {
+    return {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "generic",
+                "elements": slides
+            }
+        }
+    }
 };
 
 const askTemplate = (text, buttons) => {
@@ -177,25 +305,30 @@ const messageTemplate = (text) => {
     }
 };
 
-const sliderTemplate = () => {
-    console.log('Slider template');
-    return require('./fb_carousel');
-};
-
-const countriesSliderTemplate = () => {
-    return require('./fb_cities_carousel');
-};
 
 const fileTemplate = (file) => {
     return {
-        "attachment" : {
-            "type" : "image",
-            "payload" : {
+        "attachment": {
+            "type": "image",
+            "payload": {
                 "is_reusable": false,
                 "url": file
             }
         }
     }
+};
+
+const listTemplate = (text) => {
+  return {
+      "attachment": {
+          "type": "template",
+          "payload": {
+              "template_type": "list",
+              "top_element_style": "full",
+              "elements": require('fb_list')
+          }
+      }
+  }
 };
 
 const callSendAPI = (sender_psid, response, cb = null) => {
@@ -205,6 +338,32 @@ const callSendAPI = (sender_psid, response, cb = null) => {
             "id": sender_psid
         },
         "message": response
+    };
+    // Отправляем HTTP-запрос к Messenger Platform
+    request({
+        "uri": FACEBOOK_URI,
+        "qs": {"access_token": ACCESS_TOKEN},
+        "method": "POST",
+        "json": request_body
+    }, (err, res, body) => {
+        if (!err) {
+            if (cb) {
+                cb();
+            }
+            console.log(body);
+        } else {
+            console.error("Unable to send message:" + err);
+        }
+    });
+};
+
+const typingSendAPI = (sender_psid, typing, cb = null) => {
+    // Конструируем тело сообщения
+    let request_body = {
+        "recipient": {
+            "id": sender_psid
+        },
+        "sender_action": typing
     };
     // Отправляем HTTP-запрос к Messenger Platform
     request({

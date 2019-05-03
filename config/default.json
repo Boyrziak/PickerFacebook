@@ -4,6 +4,205 @@
       "access_token": "EAAogTAJIP40BAETiDBHsEgwM2RIimcgNaB3oE87LaGbqMP0pZBZCDLRJZAv2WoL4mtMTubXUqTQlV3Qb65ihAWr0VawYt3tyCXu4VHk4MfdvBmqCQWlLtQmDZBgBMs0OLCvfSw5BGzzsKEabt5mbysYsReIYhX0X9KwJV2XdLwZDZD",
       "verify_token": "hookMGToken",
       "uri": "https://graph.facebook.com/v2.6/me/messages"
+    },
+    "data": {
+      "countries": [
+        {
+          "title": "Oman",
+          "cities": [
+            {
+              "title": "Muscat"
+            },
+            {
+              "title": "Sohar"
+            },
+            {
+              "title": "Salalah"
+            }
+          ]
+        },
+        {
+          "title": "Bahrain",
+          "cities": [
+            {
+              "title": "Ma'ameer"
+            },
+            {
+              "title": "Arad"
+            },
+            {
+              "title": "Salmabad"
+            },
+            {
+              "title": "Manama"
+            },
+            {
+              "title": "Hamad Town"
+            }
+          ]
+        },
+        {
+          "title": "Kuwait",
+          "cities": [
+            {
+              "title": "Kuwait"
+            }
+          ]
+        },
+        {
+          "title": "KSA",
+          "cities": [
+            {
+              "title": "Muscat"
+            },
+            {
+              "title": "Jeddah"
+            },
+            {
+              "title": " Al Khobar"
+            },
+            {
+              "title": "Dammam"
+            },
+            {
+              "title": "Riyadh"
+            },
+            {
+              "title": "Yanbu"
+            },
+            {
+              "title": "Taif"
+            },
+            {
+              "title": "Madinah"
+            },
+            {
+              "title": "Jizan"
+            }
+          ]
+        },
+        {
+          "title": "UAE",
+          "cities": [
+            {
+              "title": "Dubai"
+            },
+            {
+              "title": "Abu Dhabi"
+            },
+            {
+              "title": "Ras Al-Khaimah"
+            },
+            {
+              "title": "Fujairah"
+            },
+            {
+              "title": "Ajman"
+            }
+          ]
+        },
+        {
+          "title": "Quatar",
+          "cities": [
+            {
+              "title": "الدوحة"
+            }
+          ]
+        }
+      ],
+      "models": [
+        {
+          "title": "MG6",
+          "subtitle": "Sedan",
+          "buttons": [
+            {
+              "title": "Request a test drive",
+              "payload": "MG6TEST"
+            },
+            {
+              "title": "Brochure",
+              "payload": "MG6Brochure"
+            },
+            {
+              "title": "Get a quote",
+              "payload": "MG6QUOTE"
+            }
+          ]
+        },
+        {
+          "title": "MGZS",
+          "subtitle": "SUV",
+          "buttons": [
+            {
+              "title": "Request a test drive",
+              "payload": "MGZSSTEST"
+            },
+            {
+              "title": "Brochure",
+              "payload": "MGZSBrochure"
+            },
+            {
+              "title": "Get a quote",
+              "payload": "MGZSQUOTE"
+            }
+          ]
+        },
+        {
+          "title": "MG360",
+          "subtitle": "SUV",
+          "buttons": [
+            {
+              "title": "Request a test drive",
+              "payload": "MG360TEST"
+            },
+            {
+              "title": "Brochure",
+              "payload": "MG360Brochure"
+            },
+            {
+              "title": "Get a quote",
+              "payload": "MG360QUOTE"
+            }
+          ]
+        },
+        {
+          "title": "MGGS",
+          "subtitle": "SUV",
+          "buttons": [
+            {
+              "type": "postback",
+              "title": "Request a test drive",
+              "payload": "MGGSTEST"
+            },
+            {
+              "title": "Brochure",
+              "payload": "MGGSBrochure"
+            },
+            {
+              "title": "Get a quote",
+              "payload": "MGGSQUOTE"
+            }
+          ]
+        },
+        {
+          "title": "MGRX5",
+          "subtitle": "SUV",
+          "buttons": [
+            {
+              "title": "Request a test drive",
+              "payload": "RX5TEST"
+            },
+            {
+              "title": "Brochure",
+              "payload": "MGRX5Brochure"
+            },
+            {
+              "title": "Get a quote",
+              "payload": "MGRX5QUOTE"
+            }
+          ]
+        }
+      ]
     }
   }
 }
