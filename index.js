@@ -11,21 +11,29 @@ const
     fs = require('fs'),
     app = express().use(bodyParser.json()),
     ACCESS_TOKEN = config.get('facebook.page.access_token'),
+    port = 1337,
     FACEBOOK_URI = config.get('facebook.page.uri');
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '../www')));
 
-app.listen(process.env.PORT || 1337, (err, req, res) => {
+app.listen(port, (err, req, res) => {
     if (err) return console.log(`Something bad has happen : ${err}`);
-    console.log(`Server listening`);
-    let ngrok = require('ngrok');
-    ngrok.connect(1337, (err, url) => {
-        console.log(`Server publicly acessible at ${url}`);
-    });
+    console.log(`Server listening at port ${port}`);
+    console.log(req);
+    // let ngrok = require('ngrok');
+    // ngrok.connect(1337, (err, url) => {
+    //     console.log(`Server publicly acessible at ${url}`);
+    // });
 });
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
+    console.log('Main page')
+});
+
+app.get('/about', function (request, response) {
+    response.send('About Us');
 });
 
 app.get('*', (req, res) => {
