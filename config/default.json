@@ -9,6 +9,7 @@
       "countries": [
         {
           "title": "Oman",
+          "image": "/Countries/oman.jpg",
           "cities": [
             {
               "title": "Muscat"
@@ -23,6 +24,7 @@
         },
         {
           "title": "Bahrain",
+          "image": "/Countries/Bahrain.jpg",
           "cities": [
             {
               "title": "Ma'ameer"
@@ -43,6 +45,7 @@
         },
         {
           "title": "Kuwait",
+          "image": "/Countries/Kuwait.jpg",
           "cities": [
             {
               "title": "Kuwait"
@@ -50,7 +53,8 @@
           ]
         },
         {
-          "title": "KSA",
+          "title": "Saudi Arabia",
+          "image": "/Countries/saudi.jpg",
           "cities": [
             {
               "title": "Muscat"
@@ -83,6 +87,7 @@
         },
         {
           "title": "UAE",
+          "image": "/Countries/UAE.jpg",
           "cities": [
             {
               "title": "Dubai"
@@ -102,10 +107,10 @@
           ]
         },
         {
-          "title": "Quatar",
+          "title": "Qatar",
           "cities": [
             {
-              "title": "الدوحة"
+              "title": "Doha"
             }
           ]
         }
@@ -114,60 +119,154 @@
         {
           "title": "MG6",
           "subtitle": "Sedan",
+          "brochure": "https://nd-mediagallery2-public-production.s3.amazonaws.com/5d3d3401437b3431815500427083c4f6/mg6_broxhure_230x230mm_generic_eng.pdf",
           "buttons": [
             {
+              "type": "postback",
               "title": "Request a test drive",
               "payload": "MG6TEST"
             },
             {
-              "title": "Brochure",
-              "payload": "MG6Brochure"
-            },
-            {
+              "type": "postback",
               "title": "Get a quote",
               "payload": "MG6QUOTE"
+            }
+          ],
+          "details": [
+            {
+              "title": "Exterior",
+              "image1": "e1",
+              "image2": "e2",
+              "subtitle": ""
+            },
+            {
+              "title": "Interior",
+              "image1": "i1",
+              "image2": "i2",
+              "subtitle": ""
+            },
+            {
+              "title": "Safety",
+              "image1": "s1",
+              "image2": "s2",
+              "subtitle": ""
+            },
+            {
+              "title": "Technology",
+              "image1": "t1",
+              "image2": "t2",
+              "subtitle": ""
+            },
+            {
+              "title": "Perfomance",
+              "image1": "p1",
+              "image2": "p2",
+              "subtitle": ""
             }
           ]
         },
         {
           "title": "MGZS",
           "subtitle": "SUV",
+          "brochure": "https://nd-mediagallery2-public-production.s3.amazonaws.com/ffe027ac687e80f7b9c7e3e9d884929f/mg_360_brochure.pdf",
           "buttons": [
             {
+              "type": "postback",
               "title": "Request a test drive",
               "payload": "MGZSSTEST"
             },
             {
-              "title": "Brochure",
-              "payload": "MGZSBrochure"
-            },
-            {
+              "type": "postback",
               "title": "Get a quote",
               "payload": "MGZSQUOTE"
+            }
+          ],
+          "details": [
+            {
+              "title": "Exterior",
+              "image1": "e1",
+              "image2": "e2",
+              "subtitle": ""
+            },
+            {
+              "title": "Interior",
+              "image1": "i1",
+              "image2": "i2",
+              "subtitle": ""
+            },
+            {
+              "title": "Safety",
+              "image1": "s1",
+              "image2": "s2",
+              "subtitle": ""
+            },
+            {
+              "title": "Technology",
+              "image1": "t1",
+              "image2": "t2",
+              "subtitle": ""
+            },
+            {
+              "title": "Perfomance",
+              "image1": "p1",
+              "image2": "p2",
+              "subtitle": ""
             }
           ]
         },
         {
           "title": "MG360",
           "subtitle": "SUV",
+          "brochure": "https://nd-mediagallery2-public-production.s3.amazonaws.com/ffe027ac687e80f7b9c7e3e9d884929f/mg_360_brochure.pdf",
           "buttons": [
             {
+              "type": "postback",
               "title": "Request a test drive",
               "payload": "MG360TEST"
             },
             {
-              "title": "Brochure",
-              "payload": "MG360Brochure"
-            },
-            {
+              "type": "postback",
               "title": "Get a quote",
               "payload": "MG360QUOTE"
+            }
+          ],
+          "details": [
+            {
+              "title": "Exterior",
+              "image1": "e1",
+              "image2": "e2",
+              "subtitle": ""
+            },
+            {
+              "title": "Interior",
+              "image1": "i1",
+              "image2": "i2",
+              "subtitle": ""
+            },
+            {
+              "title": "Safety",
+              "image1": "s1",
+              "image2": "s2",
+              "subtitle": ""
+            },
+            {
+              "title": "Technology",
+              "image1": "t1",
+              "image2": "t2",
+              "subtitle": ""
+            },
+            {
+              "title": "Perfomance",
+              "image1": "p1",
+              "image2": "p2",
+              "subtitle": ""
             }
           ]
         },
         {
           "title": "MGGS",
           "subtitle": "SUV",
+          "brochure": "https://nd-mediagallery2-public-production.s3.amazonaws.com/2dbb6d3d9d5be2f09a77701b9538fa6e/mg_gs_brochure.pdf",
           "buttons": [
             {
               "type": "postback",
@@ -175,30 +274,90 @@
               "payload": "MGGSTEST"
             },
             {
-              "title": "Brochure",
-              "payload": "MGGSBrochure"
-            },
-            {
+              "type": "postback",
               "title": "Get a quote",
               "payload": "MGGSQUOTE"
+            }
+          ],
+          "details": [
+            {
+              "title": "Exterior",
+              "image1": "e1",
+              "image2": "e2",
+              "subtitle": ""
+            },
+            {
+              "title": "Interior",
+              "image1": "i1",
+              "image2": "i2",
+              "subtitle": ""
+            },
+            {
+              "title": "Safety",
+              "image1": "s1",
+              "image2": "s2",
+              "subtitle": ""
+            },
+            {
+              "title": "Technology",
+              "image1": "t1",
+              "image2": "t2",
+              "subtitle": ""
+            },
+            {
+              "title": "Perfomance",
+              "image1": "p1",
+              "image2": "p2",
+              "subtitle": ""
             }
           ]
         },
         {
           "title": "MGRX5",
           "subtitle": "SUV",
+          "brochure": "https://nd-mediagallery2-public-production.s3.amazonaws.com/7858651c1a9ef34797d7bcbc1bec97c7/mg_rx5_brochure.pdf",
           "buttons": [
             {
+              "type": "postback",
               "title": "Request a test drive",
               "payload": "RX5TEST"
             },
             {
-              "title": "Brochure",
-              "payload": "MGRX5Brochure"
-            },
-            {
+              "type": "postback",
               "title": "Get a quote",
               "payload": "MGRX5QUOTE"
+            }
+          ],
+          "details": [
+            {
+              "title": "Exterior",
+              "image1": "e1",
+              "image2": "e2",
+              "subtitle": ""
+            },
+            {
+              "title": "Interior",
+              "image1": "i1",
+              "image2": "i2",
+              "subtitle": ""
+            },
+            {
+              "title": "Safety",
+              "image1": "s1",
+              "image2": "s2",
+              "subtitle": ""
+            },
+            {
+              "title": "Technology",
+              "image1": "t1",
+              "image2": "t2",
+              "subtitle": ""
+            },
+            {
+              "title": "Perfomance",
+              "image1": "p1",
+              "image2": "p2",
+              "subtitle": ""
             }
           ]
         }

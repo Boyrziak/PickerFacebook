@@ -14,22 +14,23 @@ const
     port = 1337,
     FACEBOOK_URI = config.get('facebook.page.uri');
 
+let currentUrl;
+let inquiryActive;
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '../www')));
 
 app.listen(port, (err, req, res) => {
     if (err) return console.log(`Something bad has happen : ${err}`);
     console.log(`Server listening at port ${port}`);
-    console.log(req);
-    // let ngrok = require('ngrok');
-    // ngrok.connect(1337, (err, url) => {
-    //     console.log(`Server publicly acessible at ${url}`);
-    // });
+    let ngrok = require('ngrok');
+    ngrok.connect(port, (err, url) => {
+        console.log(`Server publicly acessible at ${url}`);
+    });
 });
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
-    console.log('Main page')
+    console.log('Main page');
 });
 
 app.get('/about', function (request, response) {
@@ -38,11 +39,11 @@ app.get('/about', function (request, response) {
 
 app.get('*', (req, res) => {
     console.log(req.path);
-    let regExp = /(\w*).(png)/g;
+    let regExp = /(\w*)\.(\w*)/g;
     let requestExt = regExp.exec(req.path);
     if (requestExt) {
         console.log(requestExt);
-        if (requestExt[2] === 'png') {
+        if (requestExt[2] === 'png' || requestExt[2] === 'jpg') {
             let file = path.join(__dirname, req.path);
             console.log(file);
             let stream = fs.createReadStream(file);
@@ -78,7 +79,8 @@ app.post('/webhook', (req, res) => {
         body.entry.forEach(function (entry) {
             let webhookEvent = entry.messaging[0];
             let senderPSID = webhookEvent.sender.id;
-            // console.log('Sender PSID: ' + senderPSID);
+            currentUrl = req.protocol + '://' + req.get('host');
+            console.log(`URL: ${currentUrl}`);
             if (webhookEvent.message) {
                 handleMessage(senderPSID, webhookEvent.message);
             } else if (webhookEvent.postback) {
@@ -112,6 +114,11 @@ const handleMessage = (sender_psid, received_message) => {
     console.log('Message: ' + received_message.text);
     let regExp = /\+\d/;
     let result;
+    if(inquiryActive) {
+        response = messageTemplate('Thanks for your inquiry, one of our MG Experts will get in touch with you during working hours. Have a great day!');
+        callSendAPI(sender_psid, response);
+        return;
+    }
     if (received_message.text) {
         result = received_message.text.match(regExp);
     }
@@ -133,16 +140,43 @@ const handlePostback = (sender_psid, received_postback) => {
     let response;
     typingSendAPI(sender_psid, 'typing_on');
     let payload = received_postback.payload;
-    console.log(payload);
+    // console.log(payload);
     let model;
     let result = /(\w+)(quote)/gi.exec(payload);
+    let otherResult = /(\w+)_(other)/gi.exec(payload);
+    let manualResult = /(\w+)_(manual)/gi.exec(payload);
+    let discoverResult = /(\w+)_(DISCOVERMODEL)/gi.exec(payload);
+    let detailResult = /(\w+)_(DETAIL)_(\w+)/gi.exec(payload);
     let timer;
+    let countryWithCities;
+    let manual;
+    let discover;
+    let detail;
+    let modelDetail;
     if (result) {
         payload = result[2];
         model = result[1];
     }
+    if (otherResult) {
+        payload = otherResult[2];
+        countryWithCities = otherResult[1];
+    }
+    if (manualResult) {
+        payload = manualResult[2];
+        manual = manualResult[1];
+    }
+    if (discoverResult) {
+        payload = discoverResult[2];
+        discover = discoverResult[1];
+    }
+    if (detailResult) {
+        payload = detailResult[2];
+        modelDetail = detailResult[1];
+        detail = detailResult[3];
+    }
     let name = 'User';
     const config = require('config');
+    console.log(`Payload: ${payload} | Country: ${countryWithCities}`);
     switch (payload) {
         case 'GET_STARTED':
             request({
@@ -166,58 +200,107 @@ const handlePostback = (sender_psid, received_postback) => {
             });
             break;
         case 'ENGLISH_TEXT':
-            let buttons = generateButtons([{
-                title: 'Discover MG',
-                payload: 'DISCOVER'
-            }, {title: 'After sales', payload: 'AFTER_SALES'}]);
-            response = askTemplate('Great, now what would you like to talk about today?', buttons);
-            callSendAPI(sender_psid, response);
+            let langResponse = fileTemplate(currentUrl + '/img/after.png');
+            console.log(currentUrl + '/img/after.png');
+            callSendAPI(sender_psid, langResponse);
+            setTimeout(() => {
+                let buttons = generateButtons([{
+                    title: 'Discover MG',
+                    payload: 'DISCOVER'
+                }, {title: 'After sales', payload: 'AFTER_SALES'}]);
+                response = askTemplate('Great, now what would you like to talk about today?', buttons);
+                callSendAPI(sender_psid, response);
+            }, 1500);
             break;
         case 'DISCOVER':
-            // response = sliderTemplate();
+            let discoverMessage = messageTemplate("All new MG cars come with 6 years or 200,000 km warranty (whichever comes first) T&C's apply. Which one best reflects your personality");
+            callSendAPI(sender_psid, discoverMessage);
             let models = config.get('facebook.data.models');
             let modelSlides = [];
             models.forEach((model) => {
                 let buttonsObjects = [];
-                model.buttons.forEach((button) => {
-                    buttonsObjects.push(button);
+                buttonsObjects.push({
+                    "title": 'Discover the ' + model.title,
+                    "payload": model.title + '_DISCOVERMODEL'
                 });
                 let modelButtons = generateButtons(buttonsObjects);
                 let modelSlide = generateSlide({
                     "title": model.title,
                     "subtitle": model.subtitle,
-                    "img": 'https://a5f0faa0.ngrok.io/' + model.title + '.png'
+                    "img": currentUrl + '/img/' + model.title + '.png'
                 }, modelButtons);
                 modelSlides.push(modelSlide);
             });
             response = generatedSliderTemplate(modelSlides);
             callSendAPI(sender_psid, response);
-            timer = setTimeout(()=>{
-                request({
-                    "uri": "https://graph.facebook.com/" + sender_psid,
-                    "qs": {
-                        "fields": "first_name",
-                        "access_token": ACCESS_TOKEN
-                    },
-                    "method": "GET",
-                }, (err, res, body) => {
-                    if (!err) {
-                        let result = JSON.parse(body);
-                        name = result.first_name;
-                        let helperButtons = generateButtons([{
-                            'title': 'Showroom locations',
-                            'payload': 'SHOWROOM_LOCATION'
-                        }, {'title': 'Other', 'payload': 'Other'}]);
-                        let helperResponce = askTemplate("Did you find what you're looking for " + name + '? If not, can I help you with anything else?', helperButtons);
-                        callSendAPI(sender_psid, helperResponce);
-                    }
+            break;
+        case 'DISCOVEROTHER':
+            let otherButtons = generateURLButtons([{"title": 'MG Website', "url": 'https://www.mgmotor.me/'}]);
+            response = askTemplate('Please let me know what else I can help you with?', otherButtons);
+            callSendAPI(sender_psid, response);
+            break;
+        case 'DISCOVERMODEL':
+            let modelsWithDetails = config.get('facebook.data.models');
+            let detailsSlides = [];
+            let currentModel = modelsWithDetails.find((model) => {
+                if (model.title === discover) return model;
+            });
+            currentModel.details.forEach((detail) => {
+                let detailButton = generateButtons([{
+                    "title": "Discover",
+                    "payload": currentModel.title + '_DETAIL_' + detail.title
+                }]);
+                let detailSlide = generateSlide({
+                    "title": detail.title,
+                    "img": currentUrl + '/img/' + currentModel.title + '/' + detail.image1 + '.png'
+                }, detailButton);
+                detailsSlides.push(detailSlide);
+            });
+            response = generatedSliderTemplate(detailsSlides);
+            callSendAPI(sender_psid, response);
+            break;
+        case 'DETAIL':
+            console.log(`Model: ${modelDetail} | Detail: ${detail}`);
+            let modelsForDetails = config.get('facebook.data.models');
+            let currentDetailModel = modelsForDetails.find((model) => {
+                if (model.title === modelDetail) return model;
+            });
+            let currentDetail = currentDetailModel.details.find((detailBase) => {
+                if (detailBase.title === detail) return detailBase;
+            });
+            response = messageTemplate(currentDetail.title);
+            callSendAPI(sender_psid, response);
+            let detailResponse = fileTemplate(currentUrl + '/img/' + currentDetailModel.title + '/' + currentDetail.image2 + '.png');
+            callSendAPI(sender_psid, detailResponse);
+            setTimeout(()=>{
+                let afterObj = [];
+                currentDetailModel.buttons.forEach((button)=>{
+                    afterObj.push(button);
                 });
-            }, 5000);
+                afterObj.push({
+                    'title': 'Showroom locations',
+                    'payload': 'SHOWROOM_LOCATION'
+                });
+                afterObj.push({'title': 'Other', 'payload': 'DISCOVEROTHER'});
+                let afterSlides = [];
+                afterObj.forEach((button)=>{
+                    let buttonNew = generateButtons([button]);
+                    let afterSlide = generateSlide({"title": button.title}, buttonNew);
+                    afterSlides.push(afterSlide);
+                });
+                let brochureButton = generateURLButtons([{"title": "Brochure", "url": currentDetailModel.brochure}]);
+                let brochureSlide = generateSlide({"title": "Brochure"}, brochureButton);
+                afterSlides.push(brochureSlide);
+                let afterResponse = generatedSliderTemplate(afterSlides);
+                callSendAPI(sender_psid, afterResponse);
+            }, 2000);
             break;
         case 'QUOTE':
             response = messageTemplate('Nice choice the ' + model);
             callSendAPI(sender_psid, response);
-            let second_response = fileTemplate('https://a5f0faa0.ngrok.io/img/' + model + '.png');
+            let imageSrc = currentUrl + '/img/' + model + '.png';
+            console.log(`Image URL: ${imageSrc}`);
+            let second_response = fileTemplate(imageSrc);
             callSendAPI(sender_psid, second_response);
             setTimeout(() => {
                 let third_response = messageTemplate('Which dealership is the most convenient for you?');
@@ -237,12 +320,12 @@ const handlePostback = (sender_psid, received_postback) => {
                         citiesObjects.push({"title": "Other", "payload": country.title + '_other'});
                     }
                     let citiesButtons = generateButtons(citiesObjects);
-                    let countrySlide = generateSlide({"title": country.title}, citiesButtons);
+                    let countrySlide = generateSlide({"title": country.title, "img": imageSrc}, citiesButtons);
                     countrySlides.push(countrySlide);
                 });
                 let fourth_response = generatedSliderTemplate(countrySlides);
                 callSendAPI(sender_psid, fourth_response);
-            }, 2000);
+            }, 4000);
             break;
         case 'SHOWROOM_LOCATION':
             let countries = config.get('facebook.data.countries');
@@ -266,6 +349,110 @@ const handlePostback = (sender_psid, received_postback) => {
             let fourth_response = generatedSliderTemplate(countrySlides);
             callSendAPI(sender_psid, fourth_response);
             break;
+        case 'AFTER_SALES':
+            let salesButtons = generateButtons([{
+                'title': 'Service Centers',
+                payload: 'SERVICE_CENTERS'
+            }, {'title': 'Inquiry', payload: 'INQUIRY'}, {'title': 'Warranty', payload: 'WARRANTY'}]);
+            response = askTemplate('MG is a globally recognized brand and is also one of the pioneers of the automotive industry. We have accomplished this, only by keeping owners of MG cars happy. What can I do for you today?', salesButtons);
+            callSendAPI(sender_psid, response);
+            break;
+        case 'SERVICE_CENTERS':
+            let serviceCountries = config.get('facebook.data.countries');
+            let serviceCountrySlides = [];
+            let serviceAskResponse = messageTemplate('Which service center is the most convenient for you?');
+            callSendAPI(sender_psid, serviceAskResponse);
+            serviceCountries.forEach((country) => {
+                let citiesObjects = [];
+                if (country.cities.length <= 3) {
+                    country.cities.forEach((city) => {
+                        citiesObjects.push({"title": city.title, "payload": city.title + '_SERVICE'});
+                    });
+                } else if (country.cities.length > 3) {
+                    for (let i = 0; i < 2; i++) {
+                        citiesObjects.push({
+                            "title": country.cities[i].title,
+                            "payload": country.cities[i].title + '_SERVICE'
+                        });
+                    }
+                    citiesObjects.push({"title": "Other", "payload": country.title + '_other'});
+                }
+                let citiesButtons = generateButtons(citiesObjects);
+                let countrySlide = generateSlide({"title": country.title}, citiesButtons);
+                serviceCountrySlides.push(countrySlide);
+            });
+            let serviceResponse = generatedSliderTemplate(serviceCountrySlides);
+            callSendAPI(sender_psid, serviceResponse);
+            break;
+        case 'MANUALS':
+            response = messageTemplate('Which model do you have?');
+            callSendAPI(sender_psid, response);
+            let manualModels = config.get('facebook.data.models');
+            let manualModelSlides = [];
+            manualModels.forEach((model) => {
+                let buttonsObjects = [{'title': model.title, 'payload': model.title + '_MANUAL'}];
+                let modelButtons = generateButtons(buttonsObjects);
+                let modelSlide = generateSlide({
+                    "title": model.title,
+                    "subtitle": model.subtitle,
+                    "img": currentUrl + '/img/' + model.title + '.png'
+                }, modelButtons);
+                manualModelSlides.push(modelSlide);
+            });
+            let models_response = generatedSliderTemplate(manualModelSlides);
+            callSendAPI(sender_psid, models_response);
+            break;
+        case 'WARRANTY':
+            let warrantyUrl = 'https://www.mgmotor.me/ownership/mg-care/';
+            let warrantyButton = generateURLButtons([{"title": 'Learn More', "url": warrantyUrl}]);
+            let warrantySlide = generateSlide({"title": 'MG Care', "subtitle": "Learn more about our extended MG Care package"}, warrantyButton);
+            response = generatedSliderTemplate([warrantySlide]);
+            callSendAPI(sender_psid, response);
+            setTimeout(()=>{
+                let otherButtons = generateURLButtons([{"title": 'MG Website', "url": 'https://www.mgmotor.me/'}]);
+                let otherResponse = askTemplate('Please let me know what else I can help you with?', otherButtons);
+                callSendAPI(sender_psid, otherResponse);
+            },1500);
+            break;
+        case 'INQUIRY':
+            response = messageTemplate('Please let me know what your inquiry is about?');
+            callSendAPI(sender_psid, response);
+            inquiryActive = true;
+            break;
+        case 'other':
+            console.log(`Other cities of ${countryWithCities}`);
+            let countriesOther = config.get('facebook.data.countries');
+            let citiesSlide = [];
+            let newCountry = countriesOther.find((country) => {
+                if (country.title === countryWithCities) {
+                    return country;
+                }
+            });
+            console.log(newCountry.cities);
+            newCountry.cities.forEach((city) => {
+                let button = generateButtons([{"title": city.title, "payload": city.title}]);
+                let citySlide = generateSlide({"title": city.title}, button);
+                citiesSlide.push(citySlide);
+            });
+            response = generatedSliderTemplate(citiesSlide);
+            callSendAPI(sender_psid, response);
+            break;
+        case 'MANUAL':
+            console.log(`Manual for ${manual}`);
+            let manuals = config.get('facebook.data.models');
+            let manualCar = manuals.find((model) => {
+                if (model.title === manual) return model;
+            });
+            let modelSrc = currentUrl + '/img/' + manualCar.title + '.png';
+            let modelButton = generateButtons([{"title": 'Manual', "payload": manualCar.title + '_manualButton'}]);
+            let modelSlide = generateSlide({
+                "title": manualCar.title,
+                "subtitle": manualCar.subtitle,
+                "img": modelSrc
+            }, modelButton);
+            response = generatedSliderTemplate([modelSlide]);
+            callSendAPI(sender_psid, response);
+            break;
         default:
             response = messageTemplate('Nice, let me grab some contact details. What is your email?');
             callSendAPI(sender_psid, response);
@@ -281,6 +468,19 @@ const generateButtons = (options) => {
             "type": "postback",
             "title": option.title,
             "payload": option.payload
+        };
+        buttons.push(button);
+    });
+    return buttons;
+};
+
+const generateURLButtons = (options) => {
+    let buttons = [];
+    options.forEach((option) => {
+        let button = {
+            "type": "web_url",
+            "title": option.title,
+            "url": option.url
         };
         buttons.push(button);
     });
@@ -341,16 +541,16 @@ const fileTemplate = (file) => {
 };
 
 const listTemplate = (text) => {
-  return {
-      "attachment": {
-          "type": "template",
-          "payload": {
-              "template_type": "list",
-              "top_element_style": "full",
-              "elements": require('fb_list')
-          }
-      }
-  }
+    return {
+        "attachment": {
+            "type": "template",
+            "payload": {
+                "template_type": "list",
+                "top_element_style": "full",
+                "elements": require('fb_list')
+            }
+        }
+    }
 };
 
 const callSendAPI = (sender_psid, response, cb = null) => {
