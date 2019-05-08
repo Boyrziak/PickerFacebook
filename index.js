@@ -15,6 +15,7 @@ const
     FACEBOOK_URI = config.get('facebook.page.uri');
 
 let currentUrl;
+let otherActive;
 let inquiryActive;
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, '../www')));
@@ -117,6 +118,13 @@ const handleMessage = (sender_psid, received_message) => {
     if(inquiryActive) {
         response = messageTemplate('Thanks for your inquiry, one of our MG Experts will get in touch with you during working hours. Have a great day!');
         callSendAPI(sender_psid, response);
+        inquiryActive = false;
+        return;
+    }
+    if(otherActive) {
+        response = messageTemplate('Thanks for your request, one of our MG Experts will get in touch with you during working hours. Have a great day!');
+        callSendAPI(sender_psid, response);
+        otherActive = false;
         return;
     }
     if (received_message.text) {
@@ -238,6 +246,7 @@ const handlePostback = (sender_psid, received_postback) => {
             let otherButtons = generateURLButtons([{"title": 'MG Website', "url": 'https://www.mgmotor.me/'}]);
             response = askTemplate('Please let me know what else I can help you with?', otherButtons);
             callSendAPI(sender_psid, response);
+            otherActive = true;
             break;
         case 'DISCOVERMODEL':
             let modelsWithDetails = config.get('facebook.data.models');
@@ -411,6 +420,7 @@ const handlePostback = (sender_psid, received_postback) => {
             setTimeout(()=>{
                 let otherButtons = generateURLButtons([{"title": 'MG Website', "url": 'https://www.mgmotor.me/'}]);
                 let otherResponse = askTemplate('Please let me know what else I can help you with?', otherButtons);
+                otherActive = true;
                 callSendAPI(sender_psid, otherResponse);
             },1500);
             break;
