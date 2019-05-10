@@ -12,13 +12,19 @@
           "image": "/Countries/oman.jpg",
           "cities": [
             {
-              "title": "Muscat"
+              "title": "Muscat",
+              "showroom1": "Sultan Qaboos Highway",
+              "showroom2": "Al Azaiba North"
             },
             {
-              "title": "Sohar"
+              "title": "Sohar",
+              "showroom1": "Hail Al shbol",
+              "showroom2": "Hail Al shbol"
             },
             {
-              "title": "Salalah"
+              "title": "Salalah",
+              "showroom1": "Sanaeyah",
+              "showroom2": "Sanaeyah"
             }
           ]
         },
@@ -27,19 +33,24 @@
           "image": "/Countries/Bahrain.jpg",
           "cities": [
             {
-              "title": "Ma'ameer"
+              "title": "Ma'ameer",
+              "showroom1": "Building 4, Road 15, Block 635"
             },
             {
-              "title": "Arad"
+              "title": "Arad",
+              "showroom1": "Building 754, Road 4319, Block 243"
             },
             {
-              "title": "Salmabad"
+              "title": "Salmabad",
+              "showroom1": "Building 55, Road 88, Block 704"
             },
             {
-              "title": "Manama"
+              "title": "Manama",
+              "showroom1": "Building 270, Road 336, Block 312"
             },
             {
-              "title": "Hamad Town"
+              "title": "Hamad Town",
+              "showroom1": "Building 303, Road 305, Block 1203"
             }
           ]
         },
@@ -48,7 +59,9 @@
           "image": "/Countries/Kuwait.jpg",
           "cities": [
             {
-              "title": "Kuwait"
+              "title": "Kuwait",
+              "showroom1": "13 Street",
+              "showroom2": "Shuwaikh industrial Area"
             }
           ]
         },
@@ -57,31 +70,76 @@
           "image": "/Countries/saudi.jpg",
           "cities": [
             {
-              "title": "Muscat"
+              "title": "Muscat",
+              "showroom1": "13 Street",
+              "showroom2": "Shuwaikh industrial Area",
+              "workshop1": "Sultan Qaboos Highway",
+              "workshop2": "Al Azaiba North",
+              "workshopCoords": "58.4536038,23.5914036"
             },
             {
-              "title": "Jeddah"
+              "title": "Jeddah",
+              "showroom1": "Palestine St.",
+              "showroom2": "Bani Malik, Jeddah KSA",
+              "workshop1": "Palestine St.",
+              "workshop2": "Bani Malik, Jeddah KSA",
+              "workshopCoords": "21.5357222,39.2134224"
             },
             {
-              "title": " Al Khobar"
+              "title": "Al Khobar",
+              "showroom1": "13 Street",
+              "showroom2": "Shuwaikh industrial Area",
+              "workshop1": "Zahran High way Al Khobar",
+              "workshop2": "Al Khobar",
+              "workshopCoords": "26.251986,50.198231"
             },
             {
-              "title": "Dammam"
+              "title": "Dammam",
+              "showroom1": "King Fahad road",
+              "showroom2": "alrakah",
+              "workshop1": "Dammam –Khober bridge road Khalidiah workshop",
+              "workshop2": "Dammam",
+              "workshopCoords": "26.396732,50.166029"
             },
             {
-              "title": "Riyadh"
+              "title": "Riyadh",
+              "showroom1": "Khurais Road",
+              "showroom2": "Riyadh",
+              "workshop1": "Ring Road Exit # 17",
+              "workshop2": "Riyadh",
+              "workshopCoords": "24.644671,46.792020"
             },
             {
-              "title": "Yanbu"
+              "title": "Yanbu",
+              "showroom1": "Industrial Area",
+              "showroom2": "Yanbu",
+              "workshop1": "Industrial Area",
+              "workshop2": "Yanbu",
+              "workshopCoords": "24.118860,38.124641"
             },
             {
-              "title": "Taif"
+              "title": "Taif",
+              "showroom1": "Industrial Area King Khaild road",
+              "showroom2": "TAIF",
+              "workshop1": "Industrial Area King Khaild road",
+              "workshop2": "Taif",
+              "workshopCoords": "21.261083,40.459639"
             },
             {
-              "title": "Madinah"
+              "title": "Madinah",
+              "showroom1": "King Abdulaziz circle near STC",
+              "showroom2": "MADINAH",
+              "workshop1": "King Abdulaziz circle near STC",
+              "workshop2": "Madinah",
+              "workshopCoords": "24.469744,39.663580"
             },
             {
-              "title": "Jizan"
+              "title": "Jizan",
+              "showroom1": "King Abdulaziz Infront alrajhi showroom",
+              "showroom2": "Jizan",
+              "workshop1": "",
+              "workshop2": "",
+              "showroomCoords": "16.8846332,42.5783353"
             }
           ]
         },
@@ -137,19 +195,22 @@
               "title": "Exterior",
               "image1": "e1",
               "image2": "e2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/mg-6/#exterior-waypoint"
             },
             {
               "title": "Interior",
               "image1": "i1",
               "image2": "i2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/mg-6/#interior-waypoint"
             },
             {
               "title": "Safety",
               "image1": "s1",
               "image2": "s2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/mg-6/#safety-waypoint"
             },
             {
               "title": "Technology",
@@ -186,25 +247,29 @@
               "title": "Exterior",
               "image1": "e1",
               "image2": "e2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/zs/#exterior-waypoint"
             },
             {
               "title": "Interior",
               "image1": "i1",
               "image2": "i2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/zs/#interior-waypoint"
             },
             {
               "title": "Safety",
               "image1": "s1",
               "image2": "s2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/zs/#safety-waypoint"
             },
             {
               "title": "Technology",
               "image1": "t1",
               "image2": "t2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/zs/#technology-waypoint"
             },
             {
               "title": "Perfomance",
@@ -235,19 +300,22 @@
               "title": "Exterior",
               "image1": "e1",
               "image2": "e2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/mg-360/#exterior-waypoint"
             },
             {
               "title": "Interior",
               "image1": "i1",
               "image2": "i2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/mg-360/#interior-waypoint"
             },
             {
               "title": "Safety",
               "image1": "s1",
               "image2": "s2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/mg-360/#safety-waypoint"
             },
             {
               "title": "Technology",
@@ -259,7 +327,8 @@
               "title": "Perfomance",
               "image1": "p1",
               "image2": "p2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/mg-360/#performance-waypoint"
             }
           ]
         },
@@ -284,25 +353,29 @@
               "title": "Exterior",
               "image1": "e1",
               "image2": "e2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/gs/#exterior-waypoint"
             },
             {
               "title": "Interior",
               "image1": "i1",
               "image2": "i2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/gs/#exterior-waypoint"
             },
             {
               "title": "Safety",
               "image1": "s1",
               "image2": "s2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/gs/#exterior-waypoint"
             },
             {
               "title": "Technology",
               "image1": "t1",
               "image2": "t2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/gs/#exterior-waypoint"
             },
             {
               "title": "Perfomance",
@@ -333,25 +406,29 @@
               "title": "Exterior",
               "image1": "e1",
               "image2": "e2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/rx5/#exterior-waypoint"
             },
             {
               "title": "Interior",
               "image1": "i1",
               "image2": "i2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/rx5/#interior-waypoint"
             },
             {
               "title": "Safety",
               "image1": "s1",
               "image2": "s2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/rx5/#safety-waypoint"
             },
             {
               "title": "Technology",
               "image1": "t1",
               "image2": "t2",
-              "subtitle": ""
+              "subtitle": "",
+              "learn": "https://www.mgmotor.me/new-cars/rx5/#technology-waypoint"
             },
             {
               "title": "Perfomance",

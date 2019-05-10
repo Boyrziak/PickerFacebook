@@ -23,10 +23,10 @@ app.use(express.static(path.join(__dirname, '../www')));
 app.listen(port, (err, req, res) => {
     if (err) return console.log(`Something bad has happen : ${err}`);
     console.log(`Server listening at port ${port}`);
-    let ngrok = require('ngrok');
-    ngrok.connect(port, (err, url) => {
-        console.log(`Server publicly acessible at ${url}`);
-    });
+    // let ngrok = require('ngrok');
+    // ngrok.connect(port, (err, url) => {
+    //     console.log(`Server publicly acessible at ${url}`);
+    // });
 });
 
 app.get('/', (req, res) => {
@@ -218,7 +218,7 @@ const handlePostback = (sender_psid, received_postback) => {
                 }, {title: 'After sales', payload: 'AFTER_SALES'}]);
                 response = askTemplate('Great, now what would you like to talk about today?', buttons);
                 callSendAPI(sender_psid, response);
-            }, 1500);
+            }, 3000);
             break;
         case 'DISCOVER':
             let discoverMessage = messageTemplate("All new MG cars come with 6 years or 200,000 km warranty (whichever comes first) T&C's apply. Which one best reflects your personality");
@@ -292,6 +292,9 @@ const handlePostback = (sender_psid, received_postback) => {
                 });
                 afterObj.push({'title': 'Other', 'payload': 'DISCOVEROTHER'});
                 let afterSlides = [];
+                let learnMore = generateURLButtons([{"title": "Learn More", "url": currentDetail.learn}]);
+                let learnMoreSlide = generateSlide({"title": "Learn More"}, learnMore);
+                afterSlides.push(learnMoreSlide);
                 afterObj.forEach((button)=>{
                     let buttonNew = generateButtons([button]);
                     let afterSlide = generateSlide({"title": button.title}, buttonNew);
@@ -302,7 +305,7 @@ const handlePostback = (sender_psid, received_postback) => {
                 afterSlides.push(brochureSlide);
                 let afterResponse = generatedSliderTemplate(afterSlides);
                 callSendAPI(sender_psid, afterResponse);
-            }, 2000);
+            }, 4000);
             break;
         case 'QUOTE':
             response = messageTemplate('Nice choice the ' + model);
@@ -422,7 +425,7 @@ const handlePostback = (sender_psid, received_postback) => {
                 let otherResponse = askTemplate('Please let me know what else I can help you with?', otherButtons);
                 otherActive = true;
                 callSendAPI(sender_psid, otherResponse);
-            },1500);
+            },2500);
             break;
         case 'INQUIRY':
             response = messageTemplate('Please let me know what your inquiry is about?');
