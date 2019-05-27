@@ -1,0 +1,272 @@
+.filter_input {
+    padding-top: 13px;
+    padding-bottom: 12px;
+    padding-left: 12px;
+    display: flex;
+    font-size: 22px;
+    background: #f4f4f4;
+    flex-direction: row;
+}
+
+.filter_input .filter_input_changeable {
+    width: 150px;
+    margin-left: 10px;
+}
+
+.filter_input .filter_input_changeable:focus {
+    outline: none;
+}
+
+.form_label {
+    display: block;
+    position: relative;
+    font-size: 20px;
+    border-bottom: 1px solid #f4f4f4;
+    cursor: pointer;
+    padding: 10px 8px;
+    transition: .5s ease-out;
+    z-index: 9;
+}
+
+.form_label input {
+    position: absolute;
+    z-index: 1;
+    opacity: 0;
+}
+
+.form_label:hover {
+    background: #f4f4f4;
+}
+
+.form_label .radio_holder {
+    background: white;
+    width: 25px;
+    height: 25px;
+    border-radius: 100%;
+    right: 20px;
+    top: 8px;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: inset 0 0 4px 2px rgba(0,0,0,0.3);
+    border: 1px solid #4b5ef1;
+}
+
+.form_label .radio_holder .radio_dot {
+    opacity: 0;
+    width: 17px;
+    height: 17px;
+    border-radius: 100%;
+    background: #4b5ef1;
+    transition: .4s;
+}
+
+input#submitDish {
+    position: fixed;
+    left: 1%;
+    width: 98%;
+    padding: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    background: #354fa2;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    bottom: 0;
+    z-index: 10;
+}
+
+.carousel_holder {
+    position: relative;
+    overflow: visible;
+    padding: 0 48px;
+    margin-top: 5px;
+}
+
+.card_carousel {
+    display: flex;
+    flex-direction: row;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    min-height: 250px;
+    position: relative;
+}
+
+.card_carousel::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel_holder .carousel_button {
+    position: absolute;
+    top: 50%;
+    z-index: 99;
+    width: 30px;
+    height: 30px;
+    box-sizing: border-box;
+    background: #ffffff;
+    box-shadow: 0 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    border-radius: 100%;
+    padding: 7px 0;
+    font-size: 16px;
+    color: #929292;
+    cursor: pointer;
+}
+
+.carousel_holder .carousel_button.left_carousel_button {
+    left: 7px;
+}
+
+.carousel_holder .carousel_button.right_carousel_button {
+    right: 5px;
+}
+
+.wine_card {
+    border-radius: 7px;
+    background: #f4f4f4;
+    width: 211px;
+    min-width: 211px;
+    height: 324px;
+    display: flex;
+    flex-direction: column;
+    margin-right: 11px;
+}
+
+.wine_card .wine_card_header {
+    background: url("../../img/background.png");
+    background-size: cover;
+    padding: 14px 15px 0;
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: 7px 7px 0 0;
+    position: relative;
+    height: 145px;
+    text-transform: capitalize;
+}
+
+.wine_card .wine_card_header .wine_header_name {
+    color: white;
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+}
+
+.wine_card .wine_card_header .wine_header_origin {
+    color: white;
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    margin-bottom: 4px;
+}
+
+.wine_card .wine_card_header .wine_images {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.wine_card .wine_card_header .wine_images .wine_color {
+    margin-right: 4px;
+}
+
+.wine_card .wine_card_header .wine_images .wine_image {
+    margin-right: 4px;
+}
+
+.wine_card .wine_card_header .wine_images .wine_image img {
+    width: 79px;
+    height: 79px;
+    border-radius: 100%;
+}
+
+.wine_card .wine_card_header .wine_images .wine_country img {
+    border: 3px solid white;
+    width: 31px;
+    box-sizing: border-box;
+    border-radius: 100%;
+}
+
+.wine_card .wine_card_header .wine_properties {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    bottom: -36px;
+    width: 100%;
+    left: 0;
+}
+
+.wine_card .wine_card_header .wine_properties .wine_property {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 25%;
+    align-items: center;
+}
+
+.wine_card .wine_card_header .wine_properties .wine_property .property_number {
+    color: white;
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 500;
+    font-size: 12px;
+    padding: 5px 0;
+    box-sizing: border-box;
+    line-height: 14px;
+    width: 30px;
+    height: 30px;
+    border: 3px solid white;
+    background: #99192f;
+    border-radius: 100%;
+}
+
+.wine_card .wine_card_header .wine_properties .wine_property .property_name {
+    color: #222222;
+    text-transform: capitalize;
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 11px;
+}
+
+.wine_card .wine_card_description {
+    padding: 0 8px 6px;
+    margin-top: 35px;
+    overflow-y: scroll;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+.wine_card .wine_card_description::-webkit-scrollbar {
+    width: 3px;
+}
+
+.wine_card .wine_card_description::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.wine_card .wine_card_description::-webkit-scrollbar-thumb {
+    background: #d9d9d9;
+    border-radius: 4px;
+    width: 10px;
+}
+
+.wine_card .wine_card_description .wine_description_name {
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 14px;
+    color: #222222;
+}
+
+.wine_card .wine_card_description .wine_description_text {
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 14px;
+    color: #222222;
+    margin-top: 4px;
+}

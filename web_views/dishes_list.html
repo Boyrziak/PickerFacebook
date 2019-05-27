@@ -1,0 +1,125 @@
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+          integrity="sha384-oS3vJWv+0UjzBfQzYUhtDYW+Pj2yciDJxpsK1OYPAYjqT085Qq/1cq5FLXAZQ7Ay" crossorigin="anonymous">
+    <link href="css/style.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+
+    <title>What are you eating?</title>
+</head>
+<body>
+<script>
+    (function (d, s, id) {
+        let js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "//connect.facebook.net/en_US/messenger.Extensions.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'Messenger'));
+
+    window.extAsyncInit = function () {
+        MessengerExtensions.getSupportedFeatures(function success(result) {
+                let features = result.supported_features;
+                if (features.indexOf("context") !== -1) {
+                    MessengerExtensions.getContext('386314408639779',
+                        function success(thread_context) {
+
+                            let currentPath = window.location.protocol + '//' + window.location.hostname;
+                            let style = document.getElementsByTagName('link')[2];
+                            style.setAttribute('href', currentPath + '/web_views/css/style.css');
+                            jQuery(document).ready(($) => {
+                                let myInit = {
+                                    method: 'GET',
+                                    headers: {'Content-Type': 'application/json'}
+                                };
+                                let request = new Request(currentPath + '/dishesList', myInit);
+                                fetch(request).then((response) => {
+                                    if (response.status === 200) {
+                                        return response.json();
+                                    } else {
+                                        let paragraph = document.createElement('p');
+                                        paragraph.textContent = 'Dishes not found';
+                                        document.getElementById('dishSelection').appendChild(paragraph);
+                                    }
+                                }).then((jsonResponse) => {
+                                    console.log(jsonResponse);
+                                    jsonResponse.forEach((dish) => {
+                                        let radio = document.createElement('input');
+                                        radio.setAttribute('id', dish);
+                                        radio.setAttribute('type', 'radio');
+                                        radio.setAttribute('name', 'dish');
+                                        radio.setAttribute('value', dish);
+                                        let label = document.createElement('label');
+                                        label.setAttribute('for', dish);
+                                        label.setAttribute('class', 'form_label');
+                                        label.textContent = dish;
+                                        label.appendChild(radio);
+                                        $(label).append('<div class="radio_holder"><div class="radio_dot"></div></div>');
+                                        $(label).on('click', function () {
+                                            $('.radio_dot').css('opacity', 0);
+                                            $(this).find('.radio_dot').css('opacity', 1);
+                                        });
+                                        document.getElementById('filter_options').appendChild(label);
+                                        // $('#dishSelection').append('<input type="radio" name="dish" value="' + dish + '">' + dish + '<br>');
+                                    });
+                                    $('.filter_input_changeable').on('input', () => {
+                                        let filteredFood = jsonResponse.filter(function (element) {
+                                            let ignoreCase = element.toLowerCase();
+                                            let text = $('.filter_input_changeable').text().toLowerCase();
+                                            return ignoreCase.includes(text);
+                                        });
+                                        $('#filter_options').empty();
+                                        filteredFood.forEach((food) => {
+                                            $('#filter_options').append('<label for="' + food + '" class="form_label">' + food + '<input type="radio" name="dish" value="' + food + '"><div class="radio_holder"><div class="radio_dot"></div></div></label>');
+                                            $('.form_label').on('click', function () {
+                                                $('.radio_dot').css('opacity', 0);
+                                                $(this).find('.radio_dot').css('opacity', 1);
+                                            });
+                                        });
+                                    });
+                                });
+                                $('#dishSelection').append('<input type="submit" id="submitDish" value="Select dish">');
+                            });
+
+                            document.getElementById("psid").value = thread_context.psid;
+                            document.getElementById('submitButton').addEventListener('click', function () {
+                                MessengerExtensions.requestCloseBrowser(function success() {
+                                    console.log("Webview closing");
+                                }, function error(err) {
+                                    console.log(err);
+                                });
+                            });
+                        },
+                        function error(err) {
+                            console.log(err);
+                        }
+                    );
+                }
+            }
+            ,
+
+            function error(err) {
+                console.log(err);
+            }
+        );
+    };
+
+</script>
+<form id="dishSelection" action="/dishSelected" method="get">
+    <div class="filter_input">
+        <i class="fas fa-search"></i>
+        <div class="filter_input_changeable" contenteditable="true">
+
+        </div>
+    </div>
+    <div id="filter_options">
+
+    </div>
+    <input type="hidden" name="psid" id="psid">
+</form>
+</body>
+</html>
