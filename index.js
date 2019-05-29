@@ -3,12 +3,9 @@
 const
     express = require('express'),
     bodyParser = require('body-parser'),
-    // validator = require('email-validator'),
     request = require('request'),
     config = require('config'),
     path = require('path'),
-    // url = require('url'),
-    fs = require('fs'),
     app = express().use(bodyParser.json()),
     ACCESS_TOKEN = config.get('facebook.page.access_token'),
     port = 1337,
@@ -40,27 +37,6 @@ app.get(/(\w)*\.(\w)*/i, (req, res) => {
     }
 });
 
-// app.get(/(\w*)\.(\w*)/i, (req, res) => {
-//     console.log(`Path ${req.path}`);
-//     let requestExt = req.path;
-//     if (requestExt) {
-//         console.log(requestExt);
-//         if (requestExt[2] === 'png' || requestExt[2] === 'jpg') {
-//             let file = path.join(__dirname, req.path);
-//             let stream = fs.createReadStream(file);
-//             stream.on('error', (err) => {
-//                 console.log(`Something bad has happen : ${err}`);
-//                 res.send('No such file');
-//             });
-//             stream.on('open', () => {
-//                 res.set('Content-Type', 'image/' + requestExt[2]);
-//                 stream.pipe(res);
-//             });
-//         }
-//     }
-// });
-
-
 app.post('/webhook', (req, res) => {
     let body = req.body;
     currentUrl = req.protocol + 's://' + req.get('host');
@@ -79,7 +55,7 @@ app.post('/webhook', (req, res) => {
                 if (!err) {
                     let result = JSON.parse(body);
                     currentUser = result.id;
-                    console.log(`Current User: ${currentUser}`);
+                    // console.log(`Current User: ${currentUser}`);
                 } else {
                     console.log('Error getting User ID: ' + err);
                 }
@@ -397,18 +373,21 @@ const callNodeRed = (value, sender_psid, silent) => {
         "method": "GET"
     }, (err, res, body) => {
         if (!err) {
-            let jsonResponse = JSON.parse(body);
-            if (!silent) {
-                sendMessage(sender_psid, jsonResponse);
+            try {
+                console.log(body);
+                let jsonResponse = JSON.parse(body);
+                if (!silent) {
+                    sendMessage(sender_psid, jsonResponse);
+                }
+            } catch (e) {
+                if (e instanceof SyntaxError) {
+                    console.log(e);
+                }
             }
         } else {
             console.log("Error connecting to the Node-RED: " + err);
         }
     });
-};
-
-const getRandomId = (min, max) => {
-    return Math.floor(Math.random() * (max - min)) + min;
 };
 
 const callSendAPI = (sender_psid, response, cb = null) => {
